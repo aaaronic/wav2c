@@ -22,7 +22,7 @@
 #ifndef __WAV_DATA__
 #define __WAV_DATA__
 
-#include <strings.h>
+#include <string.h>
 #include <stdio.h>
 
 typedef struct {
