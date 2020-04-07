@@ -159,6 +159,10 @@ wavSound * loadWaveHeader(FILE * fp) {
 	return w;
 }
 
+int newLine(int i){
+	return i > 0 && (i % 20) == 0;
+}
+
 /* Loads the actual wave data into the data structure. */
 void saveWave(FILE * fpI, wavSound *s, FILE * fpO, char * name) {
     saveWave_(fpI, s, fpO, name, -1);
@@ -186,7 +190,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 
 	/* Is it a stereo file ? */
 	if (s->numChannels == 2) {
-		fprintf(fpO, "const signed char %s_dataL[]= {", name);
+		fprintf(fpO, "const signed char %s_dataL[]= {\n", name);
 		/* 8-bit ? convert 0-255 to -128-127 */
 		if (s->bitsPerSample == 8) {
 			for (i = 0 ; i < realLength ; i++) {
@@ -194,18 +198,18 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 				fprintf(fpO, "%d, ", -128 + stuff8);
 				// read right output and forget about it
 				fread(&stuff8, sizeof(unsigned char), 1, fpI);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			// reset file position;
 			fseek(fpI, filepos, SEEK_SET);
 			fprintf(fpO, "};\n\n");
-			fprintf(fpO, "const signed char %s_dataR[] = {", name);
+			fprintf(fpO, "const signed char %s_dataR[] = {\n", name);
 			for (i = 0 ; i < realLength ; i++) {
 				// read left output and forget about it
 				fread(&stuff8, sizeof(unsigned char), 1, fpI);
 				fread(&stuff8, sizeof(unsigned char), 1, fpI);
 				fprintf(fpO, "%d, ", -128 + stuff8);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			fprintf(fpO, "};\n");
 		}
@@ -219,12 +223,12 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 				// read right output and forget about it
 				fread(&stuff8, sizeof(char), 1, fpI);
 				fread(&stuff8, sizeof(char), 1, fpI);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			// reset file position;
 			fseek(fpI, filepos, SEEK_SET);
 			fprintf(fpO, "};\n\n");
-			fprintf(fpO, "const signed char %s_dataR[] = {", name);
+			fprintf(fpO, "const signed char %s_dataR[] = {\n", name);
 			for (i = 0 ; i < realLength ; i++) {
 				// read left output and forget about it
 				fread(&stuff8, sizeof(char), 1, fpI);
@@ -232,7 +236,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 				fread(&stuff8, sizeof(char), 1, fpI);
 				fread(&stuff8, sizeof(char), 1, fpI);
 				fprintf(fpO, "%d, ", (signed char)stuff8);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			fprintf(fpO, "};\n");
 		}
@@ -240,13 +244,13 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 	/* Monaural file */
 	/** PATCHED FOR GBA BASED ON MICROSOFT WAVE UNSIGNED 8-BIT PCM INPUT **/
 	else {
-		fprintf(fpO, "const signed char %s_data[] = {", name);
+		fprintf(fpO, "const signed char %s_data[] = {\n", name);
 		/* 8-bit ? convert 0-255 to -128-127 */
 		if (s->bitsPerSample == 8) {
 			for (i = 0 ; i < realLength ; i++) {
 				fread(&stuff8, sizeof(unsigned char), 1, fpI);
 				fprintf(fpO, "%d, ", -128 + stuff8);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			fprintf(fpO, "};\n");
 		} else {
@@ -254,7 +258,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 				fread(&stuff8, sizeof(char), 1, fpI);
 				fread(&stuff8, sizeof(char), 1, fpI);
 				fprintf(fpO, "%d, ", (signed char)stuff8);
-				if ((i % 20) == 0) fprintf(fpO, "\n");
+				if (newLine(i)) fprintf(fpO, "\n");
 			}
 			fprintf(fpO, "};\n");
 		}
