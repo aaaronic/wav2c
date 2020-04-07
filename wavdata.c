@@ -173,7 +173,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 
 	/* Print general information) */
 	fprintf(fpO, "// %s sound made by wav2c\n\n", name);
-	fprintf(fpO, "// const int %s_sampleRate = %d;\n", name, s->sampleRate);
+	fprintf(fpO, "const unsigned int %s_sampleRate = %d;\n", name, s->sampleRate);
 
     /* Chose the amount of samples to send to the text file
      * limiting the size to the file
@@ -182,7 +182,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
     if (MaxSamples != -1 && realLength > MaxSamples)
         realLength = MaxSamples;
 
-	fprintf(fpO, "const int %s_length = %d;\n\n", name, realLength);
+	fprintf(fpO, "const unsigned int %s_length = %d;\n\n", name, realLength);
 
 	/* Is it a stereo file ? */
 	if (s->numChannels == 2) {
@@ -199,7 +199,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 			// reset file position;
 			fseek(fpI, filepos, SEEK_SET);
 			fprintf(fpO, "};\n\n");
-			fprintf(fpO, "const signed char %s_dataR[]={", name);
+			fprintf(fpO, "const signed char %s_dataR[] = {", name);
 			for (i = 0 ; i < realLength ; i++) {
 				// read left output and forget about it
 				fread(&stuff8, sizeof(unsigned char), 1, fpI);
@@ -224,7 +224,7 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 			// reset file position;
 			fseek(fpI, filepos, SEEK_SET);
 			fprintf(fpO, "};\n\n");
-			fprintf(fpO, "const signed char %s_dataR[]={", name);
+			fprintf(fpO, "const signed char %s_dataR[] = {", name);
 			for (i = 0 ; i < realLength ; i++) {
 				// read left output and forget about it
 				fread(&stuff8, sizeof(char), 1, fpI);
@@ -238,9 +238,9 @@ void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples)
 		}
 	}
 	/* Monaural file */
-	/** PATCHED FOR ARDUINO **/
+	/** PATCHED FOR GBA BASED ON MICROSOFT WAVE UNSIGNED 8-BIT PCM INPUT **/
 	else {
-		fprintf(fpO, "const signed char %s_data[] PROGMEM ={", name);
+		fprintf(fpO, "const signed char %s_data[] = {", name);
 		/* 8-bit ? convert 0-255 to -128-127 */
 		if (s->bitsPerSample == 8) {
 			for (i = 0 ; i < realLength ; i++) {
