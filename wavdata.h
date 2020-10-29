@@ -38,8 +38,8 @@ typedef struct {
 wavSound * loadWaveHeader(FILE * fp);
 
 /* Loads the actual wave data into the data structure. */
-void saveWave(FILE * fpI, wavSound *s, FILE * fpO, char * name);
-void saveWave_(FILE * fpI, wavSound *s, FILE * fpO, char * name, int MaxSamples);
+void saveWave(FILE * fpI, wavSound *s, FILE * fpC, FILE * fpH, char * name);
+void saveWave_(FILE * fpI, wavSound *s, FILE * fpC, FILE * fpH, char * name, int MaxSamples);
 
 #endif
 

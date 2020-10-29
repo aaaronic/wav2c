@@ -35,11 +35,13 @@
 int main(int argc, char **argv) {
 	wavSound*s;
 	FILE *fin;
-	FILE *fout;
+	FILE *cout;
+	FILE *hout;
+	char houtName[10240];  /* 10KB seems like enough */
 
 	if (argc < 4 || argc > 6) {
 		printf("Usage 1: %s <file.wav> <output.c> <soundname>\n", argv[0]);
-		printf("Usage 2: %s <file.wav> <output.c> <soundname> <amount of samples>\n", argv[0]);
+		printf("Usage 2: %s <file.wav> <output.c> <soundname> <maximum_number_of_samples>\n", argv[0]);
 		exit(0);
 	}
 
@@ -52,17 +54,27 @@ int main(int argc, char **argv) {
 		exit(0);
 	}
 
-	fout = fopen(argv[2], "w");
+	cout = fopen(argv[2], "w");
 
-    switch (argc) {
-        case 4:
-            saveWave(fin, s, fout, argv[3]);
-            break;
-        case 5:
-            saveWave_(fin, s, fout, argv[3], atoi(argv[4]));
-            break;
-        default:
-            break;
-    }
+	strcpy(houtName, argv[2]);
+	size_t outNameLen = strlen(houtName);
+	houtName[outNameLen - 1] = 'h';
+	hout = fopen(houtName, "w");
+
+	switch (argc) {
+		case 4:
+			saveWave(fin, s, cout, hout, argv[3]);
+			break;
+		case 5:
+			saveWave_(fin, s, cout, hout, argv[3], atoi(argv[4]));
+			break;
+		default:
+			break;
+	}
+
+	fclose(fin);
+	fclose(cout);
+	fclose(hout);
+
 	return 0;
 }
