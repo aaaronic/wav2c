@@ -43,4 +43,4 @@ How-To
 Links
 -----
 
-[Audacity](http://audacity.sourceforge.net/): Free Audio Editor and Recorder
+[Audacity](https://www.audacityteam.org/): Free Audio Editor and Recorder
